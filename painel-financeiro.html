@@ -1206,6 +1206,9 @@ async function exportar() {
     try { await dl.save({ filename: nome, data: csv }); toast('CSV salvo.'); return; }
     catch (e) { if (e && e.code === 'declined') { toast('Exportação cancelada.'); return; } }
   }
+  if (!window.claude) {
+    try { const u = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })), l = document.createElement('a'); l.href = u; l.download = nome; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); toast('CSV baixado.'); return; } catch (e) {}
+  }
   $('#csvTit').textContent = 'Exportar CSV'; $('#csvImp').hidden = true; $('#csvExp').hidden = false; $('#csvSaida').value = csv;
   csvAberta = true; mostrarFolhas();
 }
